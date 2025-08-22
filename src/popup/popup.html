@@ -3,14 +3,57 @@
 
 <head>
   <title>Trip Analyzer</title>
-  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    body {
+      width: 320px;
+      padding: 1rem;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .status-message {
+      padding: 0.5rem;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .status-message.loading {
+      display: block;
+      background: var(--pico-primary-background);
+      color: var(--pico-primary);
+    }
+
+    .status-message.error {
+      display: block;
+      background: var(--pico-form-element-invalid-border-color);
+      color: var(--pico-form-element-invalid-color);
+    }
+
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Trip Data Analyzer</h1>
-    <button id="scrape-and-redirect">Analyze & View Report</button>
+    <header>
+      <h2>🚗 Trip Analyzer</h2>
+      <p>Analyze your car sharing trips</p>
+    </header>
+
+    <button id="scrape-and-redirect" class="primary">Analyze & View Report</button>
+
     <div id="status" class="status-message"></div>
+
+    <footer>
+      <small>Data stays on your device until you choose to analyze</small>
+    </footer>
   </div>
   <script src="popup.js"></script>
 </body>
