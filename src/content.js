@@ -1,3 +1,60 @@
+async function autoScrollUntilLoaded() {
+  return new Promise((resolve) => {
+    let lastHeight = 0;
+    let sameHeightCount = 0;
+    const maxSameHeight = 3; // Number of consecutive same heights before stopping
+    const maxScrollAttempts = 50; // Safety limit
+    let scrollAttempts = 0;
+
+    console.log('Starting auto-scroll...');
+
+    const scrollInterval = setInterval(() => {
+      // Check if we've reached maximum attempts
+      if (scrollAttempts >= maxScrollAttempts) {
+        clearInterval(scrollInterval);
+        console.log('Reached maximum scroll attempts');
+        resolve();
+        return;
+      }
+
+      const scrollContainer = document.querySelector('.infinite-scroll-component');
+      const currentHeight = scrollContainer ? scrollContainer.scrollHeight : document.documentElement.scrollHeight;
+
+      // Scroll to bottom
+      window.scrollTo(0, document.documentElement.scrollHeight);
+      scrollAttempts++;
+
+      console.log(`Scroll attempt ${scrollAttempts}, height: ${currentHeight}`);
+
+      // Check if height has changed
+      if (currentHeight === lastHeight) {
+        sameHeightCount++;
+        if (sameHeightCount >= maxSameHeight) {
+          clearInterval(scrollInterval);
+          console.log('No more content loading. Finished scrolling.');
+          resolve();
+        }
+      } else {
+        sameHeightCount = 0; // Reset counter if height changed
+        lastHeight = currentHeight;
+      }
+
+      // Additional check: look for loading indicators
+      const loadingIndicators = document.querySelectorAll('[class*="loading"], [class*="Loading"], .loader, .spinner');
+      const isLoading = Array.from(loadingIndicators).some(el =>
+        el.offsetParent !== null // Element is visible
+      );
+
+      if (!isLoading && sameHeightCount >= 1) {
+        clearInterval(scrollInterval);
+        console.log('No loading indicators found. Finished scrolling.');
+        resolve();
+      }
+
+    }, 1000); // Scroll every 1 second
+  });
+}
+
 function getTripCards() {
   // Try multiple selection strategies
   const selectors = [
@@ -60,6 +117,11 @@ const serviceUrl = 'http://localhost:8080';
 
 
 async function scrapeAndRedirect() {
+
+  console.log('Starting auto-scroll...')
+  await autoScrollUntilLoaded();
+
+
   try {
     const tripData = scrapeTripData();
     console.log(tripData);
