@@ -1,47 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Trip Data Analyzer</title>
+  <title>Trip Analyzer</title>
   <link rel="stylesheet" href="popup.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div class="container">
     <h1>Trip Data Analyzer</h1>
-    
-    <div class="summary">
-      <div class="summary-item">
-        <span class="label">Total Trips:</span>
-        <span id="total-trips" class="value">0</span>
-      </div>
-      <div class="summary-item">
-        <span class="label">Total Cost:</span>
-        <span id="total-cost" class="value">$0.00 CAD</span>
-      </div>
-      <div class="summary-item">
-        <span class="label">Total Distance:</span>
-        <span id="total-distance" class="value">0 km</span>
-      </div>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="costChart"></canvas>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="durationChart"></canvas>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="dayOfWeekChart"></canvas>
-    </div>
-    
-    <button id="analyze-btn">Analyze Trips</button>
-    <button id="export-btn">Export Data</button>
+    <button id="scrape-and-redirect">Analyze & View Report</button>
+    <div id="status" class="status-message"></div>
   </div>
-  
   <script src="popup.js"></script>
-  <script src="chart.js"></script>
 </body>
+
 </html>

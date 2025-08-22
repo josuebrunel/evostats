@@ -16,6 +16,7 @@ function getTripCards() {
   return [];
 }
 
+
 function scrapeTripData() {
   const tripCards = getTripCards();
   const trips = [];
@@ -49,19 +50,46 @@ function scrapeTripData() {
         console.warn('Date parsing error:', e);
       }
     }
-
     trips.push(trip);
   });
 
   return trips;
 }
 
-// Listen for messages from the popup
+const serviceUrl = 'http://localhost:8080';
+
+
+async function scrapeAndRedirect() {
+  try {
+    const tripData = scrapeTripData();
+    console.log(tripData);
+    let processUrl = `${serviceUrl}/process`;
+
+    const response = await fetch(processUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tripData),
+    });
+
+    const { id } = await response.json();
+    let redirectUrl = `${serviceUrl}/report/${id}`;
+    console.log(redirectUrl);
+
+    if (redirectUrl) {
+      window.open(redirectUrl, '_blank');
+      return { success: true };
+    }
+    throw new Error("No redirect URL received");
+  } catch (error) {
+    console.error("Scrape/redirect failed:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'scrapeTrips') {
-    console.log("start scraping trips");
-    const trips = scrapeTripData();
-    console.log("end scraping trips", trips);
-    sendResponse({ trips });
+  if (request.action === 'scrapeAndRedirect') {
+    console.log('Received scrapeAndRedirect message');
+    scrapeAndRedirect().then(sendResponse);
+    return true; // Keep message channel open for async response
   }
 });
