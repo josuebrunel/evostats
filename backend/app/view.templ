@@ -1,0 +1,113 @@
+package app
+
+import (
+	"fmt"
+	"github.com/josuebrunel/gopkg/component"
+	"time"
+)
+
+templ Head(title string) {
+	<head>
+		<title>Trip Report { title } | Trip Analyzer</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		@component.LinkStyle("/static/css/style.css", templ.Attributes{})
+	</head>
+}
+
+templ Summary(report ReportData) {
+	<div class="grid">
+		<div class="card">
+			<h3>Total Trips</h3>
+			<p>{ report.TotalTrips }</p>
+		</div>
+		<div class="card">
+			<h3>Total Duration</h3>
+			<p>{ report.TotalDuration } min</p>
+		</div>
+		<div class="card">
+			<h3>Total Charged</h3>
+			<p>$ { fmt.Sprintf("%.2f", report.TotalCharged) } CAD</p>
+		</div>
+		<div class="card">
+			<h3>Total Distance</h3>
+			<p>{ report.TotalDistance } km</p>
+		</div>
+	</div>
+}
+
+templ Chart(report ReportData) {
+	<div class="chart-grid">
+		<div class="chart-container">
+			<h3>Trips by Day of Week</h3>
+			<canvas id="tripsByDayChart"></canvas>
+		</div>
+		<div class="chart-container">
+			<h3>Charges by Day (CAD)</h3>
+			<canvas id="chargesByDayChart"></canvas>
+		</div>
+		<div class="chart-container">
+			<h3>Trips by Vehicle</h3>
+			<canvas id="tripsByVehicleChart"></canvas>
+		</div>
+		<div class="chart-container">
+			<h3>Cost per Trip</h3>
+			<canvas id="costPerTripChart"></canvas>
+		</div>
+	</div>
+}
+
+templ ChartContainer(title, id string) {
+	<div class="chart-container">
+		<h3>{ title }</h3>
+		<canvas id={ id }></canvas>
+	</div>
+}
+
+templ TripsDetail(report ReportData) {
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Vehicle</th>
+					<th>Duration</th>
+					<th>Cost</th>
+					<th>Distance</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, trip := range report.AllTrips {
+					<tr>
+						<td>{ trip.Date.Format(time.RFC3339) }</td>
+						<td>{ trip.Vehicle }</td>
+						<td>{ trip.Duration } min</td>
+						<td>${ fmt.Sprintf("%.2f", trip.Charged) } CAD</td>
+						<td>{ trip.Distance } km</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+templ Body(report ReportData) {
+	<body>
+		<main class="container">
+			<div class="header">
+				<h1>🚗 Trip Analysis Report</h1>
+				<p>Report ID: { report.ID } | Generated on { time.Now().Format(time.DateOnly) }</p>
+			</div>
+			@Summary(report)
+			@Chart(report)
+			@TripsDetail(report)
+		</main>
+	</body>
+}
+
+templ Layout(report ReportData) {
+	@component.HTML(templ.Attributes{}) {
+		@Head(report.ID)
+		@Body(report)
+	}
+}

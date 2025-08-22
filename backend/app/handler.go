@@ -5,6 +5,7 @@ import (
 
 	"evostat/pkg/storage"
 
+	"github.com/a-h/templ"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
@@ -57,6 +58,16 @@ func Report(s storage.Storer) echo.HandlerFunc {
 			slog.Error("failed to parse request", "error", err)
 			return err
 		}
-		return c.JSON(200, report)
+		return render(c, 200, Layout(report))
 	}
+}
+
+func render(c echo.Context, status int, tpl templ.Component) error {
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTML)
+	c.Response().WriteHeader(status)
+	if err := tpl.Render(c.Request().Context(), c.Response().Writer); err != nil {
+		slog.Error("failed to render template", "error", err)
+		return err
+	}
+	return nil
 }

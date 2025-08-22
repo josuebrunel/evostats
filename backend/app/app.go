@@ -26,6 +26,7 @@ func (a App) Run() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
+	e.Static("/static", "static")
 	e.POST("/process", Process(a.store))
 	e.GET("/report/:id", Report(a.store))
 
