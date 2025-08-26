@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+func getLocaledTime(date time.Time) string {
+	time.LoadLocation("America/Vancouver")
+	return date.Format(time.DateTime)
+}
+
 templ Head(title string) {
 	<head>
 		<title>Trip Report { title } | Trip Analyzer</title>
@@ -69,6 +74,7 @@ templ TripsDetail(report ReportData) {
 		<table>
 			<thead>
 				<tr>
+					<th>#</th>
 					<th>Date</th>
 					<th>Vehicle</th>
 					<th>Duration</th>
@@ -77,9 +83,10 @@ templ TripsDetail(report ReportData) {
 				</tr>
 			</thead>
 			<tbody>
-				for _, trip := range report.AllTrips {
+				for idx, trip := range report.AllTrips {
 					<tr>
-						<td>{ trip.Date.Format(time.RFC3339) }</td>
+						<td>{ idx+1 }</td>
+						<td>{ getLocaledTime(trip.Date) }</td>
 						<td>{ trip.Vehicle }</td>
 						<td>{ trip.Duration } min</td>
 						<td>${ fmt.Sprintf("%.2f", trip.Charged) } CAD</td>
@@ -96,7 +103,7 @@ templ Body(report ReportData) {
 		<main class="container">
 			<div class="header">
 				<h1>🚗 Trip Analysis Report</h1>
-				<p>Report ID: { report.ID } | Generated on { time.Now().Format(time.DateOnly) }</p>
+				<p>Report ID: { report.ID } | Generated on { getLocaledTime(time.Now()) }</p>
 			</div>
 			@Summary(report)
 			@Chart(report)
