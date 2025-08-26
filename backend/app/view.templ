@@ -3,11 +3,16 @@ package app
 import (
 	"fmt"
 	"github.com/josuebrunel/gopkg/component"
+	"log/slog"
 	"time"
 )
 
 func getLocaledTime(date time.Time) string {
-	time.LoadLocation("America/Vancouver")
+	loc, err := time.LoadLocation("America/Vancouver")
+	if err != nil {
+		slog.Error("Failed to load location")
+	}
+	date = date.In(loc)
 	return date.Format(time.DateTime)
 }
 
@@ -86,7 +91,7 @@ templ TripsDetail(report ReportData) {
 				for idx, trip := range report.AllTrips {
 					<tr>
 						<td>{ idx+1 }</td>
-						<td>{ getLocaledTime(trip.Date) }</td>
+						<td>{ getLocaledTime(trip.Date) } PST</td>
 						<td>{ trip.Vehicle }</td>
 						<td>{ trip.Duration } min</td>
 						<td>${ fmt.Sprintf("%.2f", trip.Charged) } CAD</td>
@@ -103,7 +108,7 @@ templ Body(report ReportData) {
 		<main class="container">
 			<div class="header">
 				<h1>🚗 Trip Analysis Report</h1>
-				<p>Report ID: { report.ID } | Generated on { getLocaledTime(time.Now()) }</p>
+				<p>Report ID: { report.ID } | Generated on { getLocaledTime(time.Now()) } PST</p>
 			</div>
 			@Summary(report)
 			@Chart(report)
