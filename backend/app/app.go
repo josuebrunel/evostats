@@ -2,7 +2,10 @@ package app
 
 import (
 	"evostat/pkg/storage"
+	"evostat/pkg/xenv"
 	"log/slog"
+	"strconv"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -14,9 +17,19 @@ type App struct {
 }
 
 func New() App {
+	ttl, _ := strconv.Atoi(xenv.GetOrDefault(xenv.AppRedisTtlN))
+
+	store, error := storage.NewRedisStorage(
+		xenv.GetOrDefault(xenv.AppRedisN),
+		xenv.GetOrDefault(xenv.AppRedisPwdN),
+		time.Duration(ttl),
+	)
+	if error != nil {
+		panic(error)
+	}
 	return App{
-		listenAddr: "127.0.0.1:8080",
-		store:      storage.NewJSONFile("user_data"),
+		listenAddr: xenv.GetOrDefault(xenv.AppAddrN),
+		store:      store,
 	}
 }
 

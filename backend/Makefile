@@ -1,4 +1,4 @@
-NAME=evostat
+NAME=evostats
 SRC=./cmd/main.go
 BIN=./bin/${NAME}
 
