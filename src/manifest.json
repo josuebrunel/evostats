@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Trip Data Analyzer",
+  "name": "EvoStats",
   "version": "1.0",
-  "description": "Scrapes and analyzes trip data",
+  "description": "Scrapes and analyzes your Evo trip data",
   "permissions": [
     "activeTab",
     "storage",
-    "tabs",
     "webNavigation",
     "webRequest"
   ],

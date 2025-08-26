@@ -73,6 +73,36 @@ function getTripCards() {
   return [];
 }
 
+function parseDurationToMinutes(durationStr) {
+  if (!durationStr) {
+    return 0;
+  }
+
+  let totalMinutes = 0;
+  const durationText = durationStr.toLowerCase().trim();
+
+  // Regex to find all number-unit pairs like "2d", "1h", "30min"
+  const matches = durationText.match(/(\d+\.?\d*)\s*(days?|h|min|m)/g) || [];
+
+  if (matches.length === 0) {
+    // If no units, assume the whole string is a number of minutes
+    const value = parseFloat(durationText);
+    return isNaN(value) ? 0 : Math.round(value);
+  }
+
+  matches.forEach(match => {
+    const value = parseFloat(match);
+    if (match.includes('d')) { // day or days
+      totalMinutes += value * 24 * 60;
+    } else if (match.includes('h')) {
+      totalMinutes += value * 60;
+    } else { // min or m
+      totalMinutes += value;
+    }
+  });
+
+  return Math.round(totalMinutes);
+}
 
 function scrapeTripData() {
   const tripCards = getTripCards();
@@ -93,7 +123,7 @@ function scrapeTripData() {
     };
 
     // Parse values
-    trip.durationMinutes = parseInt(trip.duration) || 0;
+    trip.durationMinutes = parseDurationToMinutes(trip.duration);
     trip.chargedAmount = parseFloat(trip.charged.replace(/[^\d.]/g, '')) || 0;
     trip.distanceKm = parseFloat(trip.distance.replace(/[^\d.]/g, '')) || 0;
 
@@ -101,8 +131,28 @@ function scrapeTripData() {
     const dateMatch = trip.started.match(/([A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M)/);
     if (dateMatch) {
       try {
-        trip.date = new Date(dateMatch[0]);
-        trip.dayOfWeek = trip.date.toLocaleDateString('en-US', { weekday: 'long' });
+        const dateStr = dateMatch[0];
+        // The scraped date string is in 'America/Vancouver' time, but `new Date()` parses
+        // it using the browser's local timezone. This logic corrects the timestamp.
+
+        // 1. Create a temporary date. Its UTC value is incorrect if the user is not in
+        //    the same timezone as Vancouver.
+        const tempDate = new Date(dateStr);
+
+        // 2. Calculate the offset difference between the browser's timezone and Vancouver's
+        //    for that specific date (this handles DST correctly).
+        const localOffset = tempDate.getTimezoneOffset(); // User's offset in minutes.
+        const vancouverDateInUTC = new Date(tempDate.toLocaleString('en-US', { timeZone: 'UTC' }));
+        const vancouverDateInVancouver = new Date(tempDate.toLocaleString('en-US', { timeZone: 'America/Vancouver' }));
+        const vancouverOffset = (vancouverDateInUTC.getTime() - vancouverDateInVancouver.getTime()) / 60000;
+        const offsetDifference = localOffset - vancouverOffset;
+
+        // 3. Adjust the timestamp by the difference and create the correct Date object.
+        const correctTimestamp = tempDate.getTime() - (offsetDifference * 60 * 1000);
+        trip.date = new Date(correctTimestamp);
+
+        // For consistency, also get the day of the week using the correct timezone.
+        trip.dayOfWeek = trip.date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/Vancouver' });
       } catch (e) {
         console.warn('Date parsing error:', e);
       }
