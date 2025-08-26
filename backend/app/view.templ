@@ -22,48 +22,27 @@ templ Head(title string) {
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		@component.LinkStyle("/static/css/style.css", templ.Attributes{})
+		<script src="/static/js/app.js"></script>
 	</head>
+}
+
+templ Card(title, content string) {
+	<div class="card">
+		<h3>{ title }</h3>
+		<p>{ content }</p>
+	</div>
 }
 
 templ Summary(report ReportData) {
 	<div class="grid">
-		<div class="card">
-			<h3>Total Trips</h3>
-			<p>{ report.TotalTrips }</p>
-		</div>
-		<div class="card">
-			<h3>Total Duration</h3>
-			<p>{ report.TotalDuration } min</p>
-		</div>
-		<div class="card">
-			<h3>Total Charged</h3>
-			<p>$ { fmt.Sprintf("%.2f", report.TotalCharged) } CAD</p>
-		</div>
-		<div class="card">
-			<h3>Total Distance</h3>
-			<p>{ report.TotalDistance } km</p>
-		</div>
+		@Card("Total Trips", fmt.Sprintf("%d", report.TotalTrips))
+		@Card("Total Duration", fmt.Sprintf("%d min", report.TotalDuration))
+		@Card("Total Charged", fmt.Sprintf("$ %.2f CAD", report.TotalCharged))
 	</div>
-}
-
-templ Chart(report ReportData) {
-	<div class="chart-grid">
-		<div class="chart-container">
-			<h3>Trips by Day of Week</h3>
-			<canvas id="tripsByDayChart"></canvas>
-		</div>
-		<div class="chart-container">
-			<h3>Charges by Day (CAD)</h3>
-			<canvas id="chargesByDayChart"></canvas>
-		</div>
-		<div class="chart-container">
-			<h3>Trips by Vehicle</h3>
-			<canvas id="tripsByVehicleChart"></canvas>
-		</div>
-		<div class="chart-container">
-			<h3>Cost per Trip</h3>
-			<canvas id="costPerTripChart"></canvas>
-		</div>
+	<div class="grid">
+		@Card("Total Distance", fmt.Sprintf("%.2f km", report.TotalDistance))
+		@Card("Average cost per trip", fmt.Sprintf("$ %.2f CAD", report.AvgCostPerTrip))
+		@Card("Average distance per trip", fmt.Sprintf("%.2f km", report.AvgDistance))
 	</div>
 }
 
@@ -71,6 +50,17 @@ templ ChartContainer(title, id string) {
 	<div class="chart-container">
 		<h3>{ title }</h3>
 		<canvas id={ id }></canvas>
+	</div>
+}
+
+templ Chart(report ReportData) {
+	<div class="chart-grid">
+		@ChartContainer("Trips per Day", "tripsByDayChart")
+		@ChartContainer("Cost per Day", "chargesByDayChart")
+	</div>
+	<div class="chart-grid">
+		@ChartContainer("Cost per Trip", "costPerTripChart")
+		@ChartContainer("Distance vs cost", "distanceVsCostChart")
 	</div>
 }
 
@@ -108,12 +98,28 @@ templ Body(report ReportData) {
 		<main class="container">
 			<div class="header">
 				<h1>🚗 Trip Analysis Report</h1>
-				<p>Report ID: { report.ID } | Generated on { getLocaledTime(time.Now()) } PST</p>
+				<p>Report from <strong>{ getLocaledTime(report.DateStart) } PST</strong> to <strong>{ getLocaledTime(report.DateEnd) } PST</strong></p>
 			</div>
 			@Summary(report)
 			@Chart(report)
 			@TripsDetail(report)
 		</main>
+		<script>
+			const report = {{ report }}
+			// Colors for charts
+            const colors = [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)',
+                'rgba(199, 199, 199, 0.7)'
+            ];
+
+			initializeCharts(report.days, report.tripsByDay, report.chargesByDay, 
+				report.costPerTrip, report.distancePerTrip, report.costPerTrip, colors)
+		</script>
 	</body>
 }
 

@@ -2,6 +2,8 @@ package storage
 
 import (
 	"encoding/json"
+
+	"github.com/josuebrunel/gopkg/xlog"
 )
 
 type Storer interface {
@@ -20,6 +22,7 @@ func FromByte[T any](data []byte, result T) error {
 
 func Must[T any](data T, err error) T {
 	if err != nil {
+		xlog.Error("failed to marshal data", "error", err)
 		panic(err)
 	}
 	return data

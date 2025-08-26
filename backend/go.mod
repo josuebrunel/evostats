@@ -7,6 +7,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/josuebrunel/gopkg/component v0.0.5
+	github.com/josuebrunel/gopkg/xlog v0.0.1
 	github.com/labstack/echo v3.3.10+incompatible
 )
 

@@ -3,10 +3,10 @@ package app
 import (
 	"evostat/pkg/storage"
 	"evostat/pkg/xenv"
-	"log/slog"
 	"strconv"
 	"time"
 
+	"github.com/josuebrunel/gopkg/xlog"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -44,7 +44,7 @@ func (a App) Run() {
 	e.GET("/report/:id", Report(a.store))
 
 	if err := e.Start(a.listenAddr); err != nil {
-		slog.Error("failed to start server", "error", err)
+		xlog.Error("failed to start server", "error", err)
 		panic("failed to start server")
 	}
 }
