@@ -16,22 +16,13 @@
       gap: 1rem;
     }
 
-    .status-message {
+    .error-message {
       padding: 0.5rem;
-      border-radius: 4px;
-      display: none;
-    }
-
-    .status-message.loading {
-      display: block;
-      background: var(--pico-primary-background);
-      color: var(--pico-primary);
-    }
-
-    .status-message.error {
-      display: block;
-      background: var(--pico-form-element-invalid-border-color);
+      border-radius: var(--pico-border-radius);
+      border-left: 4px solid var(--pico-form-element-invalid-border-color);
+      background-color: var(--pico-form-element-invalid-background);
       color: var(--pico-form-element-invalid-color);
+      display: none;
     }
 
     h2 {
@@ -48,8 +39,7 @@
     </header>
 
     <button id="scrape-and-redirect" class="primary">Analyze & View Report</button>
-
-    <div id="status" class="status-message"></div>
+    <div id="error-message" class="error-message"></div>
   </div>
   <script src="popup.js"></script>
 </body>
