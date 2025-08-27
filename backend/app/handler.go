@@ -1,6 +1,10 @@
 package app
 
 import (
+	"encoding/csv"
+	"fmt"
+	"net/http"
+	"strconv"
 	"time"
 
 	"evostat/pkg/storage"
@@ -60,6 +64,53 @@ func Process(s storage.Storer) echo.HandlerFunc {
 		}
 		xlog.Info("request processed", "id", id)
 		return c.JSON(200, map[string]string{"id": id})
+	}
+}
+
+func ExportCSV(s storage.Storer) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		data, err := s.Load(id)
+		if err != nil {
+			xlog.Error("failed to load request for CSV export", "id", id, "error", err)
+			return c.String(http.StatusNotFound, "Report not found")
+		}
+
+		var report ReportData
+		if err := storage.FromByte(data, &report); err != nil {
+			xlog.Error("failed to parse request for CSV export", "id", id, "error", err)
+			return err
+		}
+
+		// Set headers for CSV download
+		c.Response().Header().Set(echo.HeaderContentType, "text/csv")
+		c.Response().Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"trip_report_%s.csv\"", id))
+
+		writer := csv.NewWriter(c.Response().Writer)
+		defer writer.Flush()
+
+		// Write CSV header
+		header := []string{"Date", "Vehicle", "Duration (min)", "Cost (CAD)", "Distance (km)"}
+		if err := writer.Write(header); err != nil {
+			return err
+		}
+
+		loc, _ := time.LoadLocation("America/Vancouver")
+
+		// Write trip data
+		for _, trip := range report.AllTrips {
+			record := []string{
+				trip.Date.In(loc).Format(time.DateTime),
+				trip.Vehicle,
+				strconv.Itoa(trip.Duration),
+				fmt.Sprintf("%.2f", trip.Charged),
+				fmt.Sprintf("%.2f", trip.Distance),
+			}
+			if err := writer.Write(record); err != nil {
+				return err
+			}
+		}
+		return nil
 	}
 }
 

@@ -99,6 +99,9 @@ templ Body(report ReportData) {
 			<div class="header">
 				<h1>🚗 Trip Analysis Report</h1>
 				<p>Report from <strong>{ getLocaledTime(report.DateStart) } PST</strong> to <strong>{ getLocaledTime(report.DateEnd) } PST</strong></p>
+				<a href={ templ.URL(fmt.Sprintf("/report/%s/csv", report.ID)) } role="button" class="secondary" download={ fmt.Sprintf("trip_report_%s.csv", report.ID) }>
+					Export as CSV
+				</a>
 			</div>
 			@Summary(report)
 			@Chart(report)

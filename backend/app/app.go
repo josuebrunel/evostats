@@ -42,6 +42,7 @@ func (a App) Run() {
 	e.Static("/static", "static")
 	e.POST("/process", Process(a.store))
 	e.GET("/report/:id", Report(a.store))
+	e.GET("/report/:id/csv", ExportCSV(a.store))
 
 	if err := e.Start(a.listenAddr); err != nil {
 		xlog.Error("failed to start server", "error", err)
