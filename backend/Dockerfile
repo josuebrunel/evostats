@@ -10,8 +10,6 @@ ENV TZ=America/Vancouver
 RUN     mkdir /go/src/app
 WORKDIR /go/src/app
 ADD     . /go/src/app
-ENV 	GOCACHE=/root/.cache/go-build
-RUN 	--mount=type=cache,target="/root/.cache/go-build"
 RUN     make deps
 RUN     make build
 EXPOSE  8080 
