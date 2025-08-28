@@ -3,6 +3,11 @@
   "name": "EvoStats",
   "version": "1.0",
   "description": "Scrapes and analyzes your Evo trip data",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
   "permissions": [
     "activeTab",
     "storage",
@@ -20,7 +25,10 @@
     }
   ],
   "action": {
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "128": "icons/128.png"
+    }
   },
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
