@@ -1,11 +1,4 @@
 services:
-  redis:
-      container_name: evostats-redis
-      image: redis:7.2-alpine
-      ports:
-        - "8079:6379"
-      networks:
-        - evostat
   dev:
       container_name: evostats-dev
       build:
@@ -13,28 +6,24 @@ services:
         dockerfile: Dockerfile
         target: build
       ports:
-        - "8000:8000"
+        - "8080:8080"
       volumes:
         - .:/app
       networks:
         - evostat
       env_file:
         - .env
-      depends_on:
-        - redis
   evostats:
       container_name: evostats
       build:
         context: .
         dockerfile: Dockerfile
       ports:
-        - "8000:8000"
+        - "8080:8080"
       networks:
         - evostat
       env_file:
         - .env
-      depends_on:
-        - redis
 
 networks:
   evostat:
