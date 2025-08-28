@@ -4,14 +4,15 @@ FROM    golang:latest AS build
 ENV     GO111MODULE=on
 ENV     CGO_ENABLED=0
 
+RUN     apt update && apt upgrade -y
+RUN     apt install -y tzdata
+ENV     TZ=America/Vancouver
 RUN     mkdir /go/src/app
 WORKDIR /go/src/app
 ADD     . /go/src/app
-ENV 	GOCACHE=/root/.cache/go-build
-RUN 	--mount=type=cache,target="/root/.cache/go-build"
 RUN     make deps
 RUN     make build
-EXPOSE  8080 
+EXPOSE  8080
 
 
 # Subscriber
