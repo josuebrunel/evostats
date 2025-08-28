@@ -5,18 +5,18 @@ import "os"
 const (
 	AppAddrN     = "APP_ADDR"
 	AppAddrV     = ":8080"
-	AppRedisN    = "APP_REDIS_ADDR"
-	AppRedisV    = "127.0.0.1:6379"
-	AppRedisPwdN = "APP_REDIS_PWD"
-	AppRedisPwdV = ""
-	AppRedisTtlN = "APP_REDIS_TTL"
-	AppRedisTtlV = "60"
+	AppCacheN    = "APP_CACHE_ADDR"
+	AppCacheV    = "127.0.0.1:6379"
+	AppCachePwdN = "APP_CACHE_PWD"
+	AppCachePwdV = ""
+	AppCacheTtlN = "APP_CACHE_TTL"
+	AppCacheTtlV = "300"
 )
 
 var EnvDefault = map[string]string{
 	AppAddrN:     AppAddrV,
-	AppRedisN:    AppRedisV,
-	AppRedisPwdN: AppRedisPwdV,
+	AppCacheN:    AppCacheV,
+	AppCachePwdN: AppCachePwdV,
 }
 
 func GetOrDefault(key string) string {

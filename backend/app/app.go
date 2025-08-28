@@ -17,16 +17,15 @@ type App struct {
 }
 
 func New() App {
-	ttl, _ := strconv.Atoi(xenv.GetOrDefault(xenv.AppRedisTtlN))
+	ttlV, _ := strconv.Atoi(xenv.GetOrDefault(xenv.AppCacheTtlN))
 
-	store, error := storage.NewRedisStorage(
-		xenv.GetOrDefault(xenv.AppRedisN),
-		xenv.GetOrDefault(xenv.AppRedisPwdN),
-		time.Duration(ttl),
-	)
-	if error != nil {
-		panic(error)
+	ttl := time.Duration(ttlV)
+	store, err := storage.NewGoCacheStorage(ttl*time.Second, ttl*time.Second)
+	if err != nil {
+		xlog.Error("failed to create storage", "error", err)
+		panic(err)
 	}
+
 	return App{
 		listenAddr: xenv.GetOrDefault(xenv.AppAddrN),
 		store:      store,
@@ -48,4 +47,5 @@ func (a App) Run() {
 		xlog.Error("failed to start server", "error", err)
 		panic("failed to start server")
 	}
+	defer a.store.Close()
 }

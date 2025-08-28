@@ -2,14 +2,18 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/josuebrunel/gopkg/xlog"
 )
+
+var ErrNotFound = errors.New("not found")
 
 type Storer interface {
 	Save(string, []byte) error
 	Load(string) ([]byte, error)
 	Delete(string) error
+	Close() error
 }
 
 func ToByte[T any](data T) ([]byte, error) {

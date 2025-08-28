@@ -9,6 +9,7 @@ require (
 	github.com/josuebrunel/gopkg/component v0.0.5
 	github.com/josuebrunel/gopkg/xlog v0.0.1
 	github.com/labstack/echo v3.3.10+incompatible
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 )
 
 require (

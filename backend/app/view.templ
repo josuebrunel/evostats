@@ -126,6 +126,19 @@ templ Body(report ReportData) {
 	</body>
 }
 
+templ ErrorPage(err string) {
+	@component.HTML(templ.Attributes{}) {
+		@Head("Report not found")
+		<body>
+			<main class="container">
+				<div class="header">
+					<h1>{ err }</h1>
+				</div>
+			</main>
+		</body>
+	}
+}
+
 templ Layout(report ReportData) {
 	@component.HTML(templ.Attributes{}) {
 		@Head(report.ID)

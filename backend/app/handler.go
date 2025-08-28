@@ -73,13 +73,13 @@ func ExportCSV(s storage.Storer) echo.HandlerFunc {
 		data, err := s.Load(id)
 		if err != nil {
 			xlog.Error("failed to load request for CSV export", "id", id, "error", err)
-			return c.String(http.StatusNotFound, "Report not found")
+			return render(c, http.StatusNotFound, ErrorPage(err.Error()))
 		}
 
 		var report ReportData
 		if err := storage.FromByte(data, &report); err != nil {
 			xlog.Error("failed to parse request for CSV export", "id", id, "error", err)
-			return err
+			return render(c, http.StatusInternalServerError, ErrorPage(err.Error()))
 		}
 
 		// Set headers for CSV download
@@ -121,12 +121,12 @@ func Report(s storage.Storer) echo.HandlerFunc {
 		data, err := s.Load(id)
 		if err != nil {
 			xlog.Error("failed to load request", "error", err)
-			return err
+			return render(c, http.StatusNotFound, ErrorPage(err.Error()))
 		}
 		var report = ReportData{}
 		if err := storage.FromByte(data, &report); err != nil {
 			xlog.Error("failed to parse request", "error", err)
-			return err
+			return render(c, http.StatusInternalServerError, ErrorPage(err.Error()))
 		}
 		return render(c, 200, Layout(report))
 	}

@@ -38,3 +38,7 @@ func (f JSONFile) Delete(path string) error {
 	path = f.fullpath(path)
 	return os.Remove(path)
 }
+
+func (f JSONFile) Close() error {
+	return nil
+}
