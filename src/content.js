@@ -163,7 +163,8 @@ function scrapeTripData() {
   return trips;
 }
 
-const serviceUrl = 'http://localhost:8080';
+// const serviceUrl = 'http://localhost:8080';
+const serviceUrl = 'https://evostats.cc';
 
 
 async function scrapeAndRedirect() {

@@ -9,15 +9,15 @@
     "128": "icons/128.png"
   },
   "permissions": [
-    "activeTab",
-    "storage",
-    "webNavigation",
-    "webRequest"
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://evo-fo.vulog.center/billing*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://*/*"
+        "https://evo-fo.vulog.center/billing*"
       ],
       "js": [
         "content.js"

@@ -19,6 +19,7 @@ func getLocaledTime(date time.Time) string {
 templ Head(title string) {
 	<head>
 		<title>Trip Report { title } | Trip Analyzer</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		@component.LinkStyle("/static/css/style.css", templ.Attributes{})
@@ -97,11 +98,16 @@ templ Body(report ReportData) {
 	<body>
 		<main class="container">
 			<div class="header">
-				<h1>🚗 Trip Analysis Report</h1>
+				<h1><i class="fa-solid fa-chart-simple"></i> Trip Analysis Report</h1>
 				<p>Report from <strong>{ getLocaledTime(report.DateStart) } PST</strong> to <strong>{ getLocaledTime(report.DateEnd) } PST</strong></p>
-				<a href={ templ.URL(fmt.Sprintf("/report/%s/csv", report.ID)) } role="button" class="secondary" download={ fmt.Sprintf("trip_report_%s.csv", report.ID) }>
-					Export as CSV
-				</a>
+				<div class="header-actions">
+					<a href={ templ.URL(fmt.Sprintf("/report/%s/csv", report.ID)) } role="button" class="secondary" download={ fmt.Sprintf("trip_report_%s.csv", report.ID) }>
+						<i class="fa-solid fa-file-csv"></i> Export as CSV
+					</a>
+					<a href="https://www.buymeacoffee.com/josuebrune0" target="_blank" rel="noopener noreferrer" role="button" class="contrast">
+						<i class="fa-solid fa-mug-saucer"></i> Buy me a coffee
+					</a>
+				</div>
 			</div>
 			@Summary(report)
 			@Chart(report)
