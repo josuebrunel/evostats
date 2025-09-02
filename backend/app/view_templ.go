@@ -588,7 +588,7 @@ func ErrorPage(err string) templ.Component {
 	})
 }
 
-func Layout(report ReportData) templ.Component {
+func PrivacyPolicyPage() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -621,11 +621,75 @@ func Layout(report ReportData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Err = Head("Privacy Policy").Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, " <body><main class=\"container\"><div class=\"header\" style=\"text-align: left; margin-bottom: 2rem;\"><h1><i class=\"fa-solid fa-shield-halved\"></i> Privacy Policy for EvoStats</h1><p>Last Updated: ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var29 string
+			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(time.Now().Format("January 2, 2006"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `app/view.templ`, Line: 155, Col: 60}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p></div><article><h2>Introduction</h2><p>Welcome to EvoStats. We are committed to protecting your privacy. This Privacy Policy explains what information we collect, how we use it, and your rights in relation to it.</p><p>Our service is designed with privacy as a core principle. We only process the data necessary to provide you with your trip analysis, and we do not store it permanently.</p><h2>What Information We Collect</h2><p>When you use the EvoStats Chrome Extension on your car sharing service's trip history page, we collect the following information from that page only:</p><ul><li>Trip dates and times</li><li>Trip duration and distance</li><li>Vehicle information (e.g., model and license plate)</li><li>Cost information for each trip</li><li>Service location (e.g., city)</li></ul><h2>What We <u>Never</u> Collect</h2><p>We are committed to your privacy and have designed our system to explicitly avoid collecting any Personally Identifiable Information (PII). We never collect:</p><ul><li>Your name, email address, or other personal contact details</li><li>Your login credentials for any website</li><li>Your payment details (credit card numbers, etc.)</li><li>Your precise location data outside of the trip context</li><li>Any data from websites other than the specific trip history page you are on when you activate the extension.</li></ul><h2>How We Use Your Information</h2><p>The collected trip data is used for the sole purpose of generating a temporary, personalized analysis report for you.</p><h2>Data Storage and Retention</h2><p>Your privacy is paramount. Here’s how we handle your data's lifecycle:</p><ol><li><strong>Transmission:</strong> Your scraped trip data is sent securely over HTTPS to our backend service.</li><li><strong>Processing:</strong> The data is processed in-memory to generate your unique report.</li><li><strong>Temporary Storage:</strong> The generated report data is stored temporarily in an in-memory cache (using go-cache) on our server, associated with a unique, unguessable ID.</li><li><strong>Automatic Deletion:</strong> The cached data is automatically deleted after a short period (default is <strong>5 minutes</strong>). After this time, the data is permanently gone and your report link will no longer work.</li></ol><p><strong>We do not store your data in any permanent database.</strong></p><h2>Contact Us</h2><p>If you have any questions about this Privacy Policy, please feel free to open an issue on our <a href=\"https://github.com/josuebrunel/evostat\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub repository</a>.</p></article></main></body>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = component.HTML(templ.Attributes{"lang": "en"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func Layout(report ReportData) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var30 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var30 == nil {
+			templ_7745c5c3_Var30 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Var31 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = Head(report.ID).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, " ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, " ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -635,7 +699,7 @@ func Layout(report ReportData) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = component.HTML(templ.Attributes{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var28), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = component.HTML(templ.Attributes{}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var31), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

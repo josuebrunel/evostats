@@ -15,6 +15,12 @@ import (
 	"github.com/labstack/echo"
 )
 
+func PrivacyPolicy() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return render(c, http.StatusOK, PrivacyPolicyPage())
+	}
+}
+
 func Process(s storage.Storer) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var req = []Trip{}

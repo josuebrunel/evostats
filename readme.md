@@ -7,11 +7,11 @@ A privacy-focused Chrome extension that analyzes your evo trip data and generate
 ### Data Flow
 1. **User Initiation**: Click the extension icon while on a trip history page
 2. **Auto-Scrolling**: Extension automatically scrolls to load all available trip data
-3. **Data Extraction**: Trip information is scraped from the page DOM
-4. **Secure Transmission**: Data is sent to our analysis service via HTTPS
-5. **Temporary Storage**: Data stored in Redis with automatic expiration (TTL)
-6. **Report Generation**: Interactive visual report is generated with charts
-7. **User Redirect**: User is redirected to their personalized report page
+3. **Data Extraction**: Non-personal trip information is scraped from the page's DOM.
+4. **Secure Transmission**: Data is sent to our analysis service via HTTPS.
+5. **Temporary Storage**: Data is stored in a temporary, in-memory cache with an automatic expiration (TTL) of 5 minutes.
+6. **Report Generation**: An interactive visual report is generated.
+7. **User Redirect**: You are redirected to your personalized, temporary report page.
 
 ### Technical Architecture
 
