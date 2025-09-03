@@ -1,43 +1,32 @@
 body {
     width: 300px;
-    padding: 15px;
-    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    padding: 0 1rem 1rem 1rem;
+}
+
+hgroup {
+    margin-bottom: 1rem;
 }
 
 button {
-    padding: 10px 15px;
-    background: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+    width: 100%;
 }
 
-button:hover {
-    background: #3367d6;
+.error {
+    color: var(--pico-color-red-500);
+    font-size: 0.9em;
+    margin-top: 1rem;
+    word-wrap: break-word;
 }
 
-.status-message {
-    padding: 10px;
-    border-radius: 4px;
-    display: none;
+footer {
+    margin-top: 1.5rem;
+    font-size: 0.8em;
 }
 
-.status-message.loading {
-    display: block;
-    background: #fff8e1;
-    color: #ff8f00;
-}
-
-.status-message.error {
-    display: block;
-    background: #ffebee;
-    color: #c62828;
+footer a {
+    color: var(--pico-muted-foreground);
 }

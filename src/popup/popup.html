@@ -1,43 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Trip Analyzer</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    body {
-      width: 320px;
-      padding: 1rem;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
-    }
-
-    .error-message {
-      padding: 0.5rem;
-      border-radius: var(--pico-border-radius);
-      border-left: 4px solid var(--pico-form-element-invalid-border-color);
-      background-color: var(--pico-form-element-invalid-background);
-      color: var(--pico-form-element-invalid-color);
-      display: none;
-    }
-
-    h2 {
-      margin-bottom: 0.5rem;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>EvoStats Analyzer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="popup.css">
 </head>
 
 <body>
   <main class="container">
-    <h2>EvoStats</h2>
-    <p>Your Evo trips analyzer</p>
-    <button id="scrape-and-redirect" class="primary">Analyze & View Report</button>
-    <div id="error-message" class="error-message"></div>
+    <header>
+      <hgroup>
+        <h2>EvoStats</h2>
+        <p>Trip Report Analyzer</p>
+      </hgroup>
+    </header>
+
+    <button id="scrape-and-redirect">Analyze & View Report</button>
+
+    <p id="error-message" class="error" style="display: none;"></p>
+
+    <footer>
+      <a href="https://evostats.cc/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+    </footer>
   </main>
   <script src="popup.js"></script>
 </body>
