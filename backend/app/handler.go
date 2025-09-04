@@ -134,7 +134,7 @@ func Report(s storage.Storer) echo.HandlerFunc {
 			xlog.Error("failed to parse request", "error", err)
 			return render(c, http.StatusInternalServerError, ErrorPage(err.Error()))
 		}
-		return render(c, 200, Layout(report))
+		return render(c, 200, ReportPage(report))
 	}
 }
 
