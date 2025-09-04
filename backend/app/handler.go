@@ -15,6 +15,12 @@ import (
 	"github.com/labstack/echo"
 )
 
+func Home() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return render(c, http.StatusOK, HomePage())
+	}
+}
+
 func PrivacyPolicy() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return render(c, http.StatusOK, PrivacyPolicyPage())

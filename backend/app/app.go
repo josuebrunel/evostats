@@ -39,6 +39,7 @@ func (a App) Run() {
 	e.Use(middleware.CORS())
 
 	e.Static("/static", "static")
+	e.GET("/", Home())
 	e.POST("/process", Process(a.store))
 	e.GET("/report/:id", Report(a.store))
 	e.GET("/report/:id/csv", ExportCSV(a.store))

@@ -94,6 +94,16 @@ templ TripsDetail(report ReportData) {
 	</div>
 }
 
+templ Footer() {
+	<footer style="text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--pico-muted-border-color);">
+		<p>
+			<a href="/privacy">Privacy Policy</a> •
+			<a href="https://github.com/josuebrunel/evostat" target="_blank" rel="noopener noreferrer">GitHub</a>
+		</p>
+		<p>EvoStats is an independent project and is not affiliated with Evo Car Share.</p>
+	</footer>
+}
+
 templ ReportPage(report ReportData) {
 	@Layout("Trip Report " + report.ID) {
 		<div class="header">
@@ -111,6 +121,7 @@ templ ReportPage(report ReportData) {
 		@Summary(report)
 		@Chart(report)
 		@TripsDetail(report)
+		@Footer()
 		<script>
 			const report = {{ report }}
 			// Colors for charts
@@ -135,6 +146,43 @@ templ ErrorPage(err string) {
 		<div class="header">
 			<h1>{ err }</h1>
 		</div>
+		@Footer()
+	}
+}
+
+templ HomePage() {
+	@Layout("Home") {
+		<div class="header" style="text-align: center; margin-bottom: 2rem;">
+			<h1><i class="fa-solid fa-rocket"></i> Welcome to EvoStats</h1>
+			<p>Your personal car-sharing trip analyzer.</p>
+		</div>
+		<article>
+			<hgroup>
+				<h2>Analyze Your Trips in Seconds</h2>
+				<p>EvoStats is a privacy-focused browser extension that generates comprehensive visual reports from your Evo Car Share trip history.</p>
+			</hgroup>
+			<div class="grid" style="--pico-grid-spacing-vertical: 2rem; --pico-grid-spacing-horizontal: 2rem; align-items: center;">
+				<div>
+					<h3>How It Works</h3>
+					<ol>
+						<li>Install the free Chrome Extension.</li>
+						<li>Navigate to your Evo trip history page.</li>
+						<li>Click the extension icon and then "Analyze & View Report".</li>
+						<li>Get a detailed, temporary report with charts and stats!</li>
+					</ol>
+					<a href="https://chrome.google.com/webstore/detail/kgnffdcpakdhbodfipljcimgegcbeamc" target="_blank" rel="noopener noreferrer" role="button" class="primary">
+						<i class="fa-brands fa-chrome"></i> Get the Extension
+					</a>
+				</div>
+				<div>
+					<h3>See It in Action</h3>
+					<div class="video-container">
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/y3MqSGbzN9E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+					</div>
+				</div>
+			</div>
+		</article>
+		@Footer()
 	}
 }
 
@@ -180,6 +228,7 @@ templ PrivacyPolicyPage() {
 			<h2>Contact Us</h2>
 			<p>If you have any questions about this Privacy Policy, please feel free to open an issue on our <a href="https://github.com/josuebrunel/evostat" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
 		</article>
+		@Footer()
 	}
 }
 
