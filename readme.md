@@ -19,7 +19,7 @@ A privacy-focused Chrome extension that analyzes your evo trip data and generate
 ### Technical Architecture
 
 ```
-Browser → Chrome Extension → HTTPS → Go Backend → Redis (TTL) → Report Generation → User Redirect
+Browser → Chrome Extension → HTTPS → Go Backend → In-Memory Cache (TTL) → Report Generation → User Redirect
 ```
 
 
@@ -27,7 +27,7 @@ Browser → Chrome Extension → HTTPS → Go Backend → Redis (TTL) → Report
 
 ### Data Handling
 - **No Data Persistence**: We never store your trip data permanently
-- **Redis TTL**: All data automatically expires from memory after 24 hours
+- **Automatic Expiry**: All data automatically expires from memory after 5 minutes (configurable via APP_CACHE_TTL)
 - **Temporary Processing**: Data exists only during your active session
 - **No Tracking**: We don't track users across sessions or websites
 
@@ -101,7 +101,7 @@ Since this extension is fully open source:
 1. **Collection**: Only from pages you explicitly visit
 2. **Transmission**: Encrypted via HTTPS to our secure API
 3. **Processing**: Temporary in-memory storage only
-4. **Expiration**: Automatic deletion after 10 minutes
+4. **Expiration**: Automatic deletion after 5 minutes (default, configurable)
 5. **Access**: Only via unique, time-limited URLs
 
 ### Browser Permissions
@@ -123,10 +123,10 @@ Yes. We designed this extension with privacy as the top priority:
 Yes! The extension shows exactly what data will be sent before any transmission occurs. You can review and cancel if desired.
 
 ### How long is my data stored?
-Maximum 24 hours in our temporary Redis storage, after which it's automatically deleted.
+Maximum 5 minutes in our temporary in-memory cache, after which it's automatically deleted.
 
 ### Can I delete my data sooner?
-Yes. Simply close the report tab and the data will expire naturally within 24 hours, or you can manually delete the Redis key if you have access.
+Yes. Simply close the report tab and the data will expire naturally within 5 minutes.
 
 ### Is this extension free?
 Yes, completely free and open source under the MIT License.
