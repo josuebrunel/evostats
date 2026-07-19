@@ -1,0 +1,9 @@
+evostats.cc {
+    reverse_proxy 127.0.0.1:8580
+    log {
+        output file /var/log/caddy/evostats.log {
+            roll_size 50mb
+            roll_keep 5
+        }
+    }
+}
