@@ -108,63 +108,87 @@ function scrapeTripData() {
   const tripCards = getTripCards();
   const trips = [];
 
-  tripCards.forEach((card) => {
-    // More robust field extraction using text pattern matching
-    const fields = Array.from(card.querySelectorAll('div.MuiGrid-container > div.MuiGrid-container > div.MuiGrid-item'));
+  // Define field patterns for robust, order-independent matching.
+  const fieldPatterns = {
+    started: /Started(.+)/,
+    duration: /Duration(.+)/,
+    charged: /Charged(.+)/,
+    vehicle: /Vehicle(.+)/,
+    distance: /Distance(.+)/,
+    service: /Service(.+)/,
+    city: /City(.+)/,
+  };
 
-    const trip = {
-      started: fields[0]?.textContent.match(/Started(.+)/)?.[1]?.trim() || '',
-      duration: fields[1]?.textContent.match(/Duration(.+)/)?.[1]?.trim() || '',
-      charged: fields[2]?.textContent.match(/Charged(.+)/)?.[1]?.trim() || '',
-      vehicle: fields[3]?.textContent.match(/Vehicle(.+)/)?.[1]?.trim() || '',
-      distance: fields[4]?.textContent.match(/Distance(.+)/)?.[1]?.trim() || '',
-      service: fields[5]?.textContent.match(/Service(.+)/)?.[1]?.trim() || '',
-      city: fields[6]?.textContent.match(/City(.+)/)?.[1]?.trim() || ''
+  tripCards.forEach((card) => {
+    const trip = {};
+
+    // Use a more generic selector to find all potential data fields within a card.
+    // This is more resilient to changes in the DOM structure than a highly specific path.
+    const potentialFields = card.querySelectorAll('.MuiGrid-item');
+
+    potentialFields.forEach(field => {
+      const text = field.textContent || '';
+      // Check the text against each pattern.
+      for (const key in fieldPatterns) {
+        const match = text.match(fieldPatterns[key]);
+        if (match && match[1]) {
+          trip[key] = match[1].trim();
+          // Once a field is matched, we can stop checking other patterns for this element.
+          break;
+        }
+      }
+    });
+
+    // Only process the trip if we have the essential data.
+    if (!trip.started) {
+      return; // Continue to the next card if no start date is found.
+    }
+
+    // Ensure all properties exist before parsing.
+    const fullTrip = {
+      started: trip.started || '',
+      duration: trip.duration || '',
+      charged: trip.charged || '',
+      vehicle: trip.vehicle || '',
+      distance: trip.distance || '',
+      service: trip.service || '',
+      city: trip.city || '',
     };
 
     // Parse values
-    trip.durationMinutes = parseDurationToMinutes(trip.duration);
-    trip.chargedAmount = parseFloat(trip.charged.replace(/[^\d.]/g, '')) || 0;
-    trip.distanceKm = parseFloat(trip.distance.replace(/[^\d.]/g, '')) || 0;
+    fullTrip.durationMinutes = parseDurationToMinutes(fullTrip.duration);
+    fullTrip.chargedAmount = parseFloat(fullTrip.charged.replace(/[^\d.]/g, '')) || 0;
+    fullTrip.distanceKm = parseFloat(fullTrip.distance.replace(/[^\d.]/g, '')) || 0;
 
     // Date parsing with better error handling
-    const dateMatch = trip.started.match(/([A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M)/);
+    const dateMatch = fullTrip.started.match(/([A-Za-z]+ \d{1,2}, \d{4} \d{1,2}:\d{2} [AP]M)/);
     if (dateMatch) {
       try {
         const dateStr = dateMatch[0];
-        // The scraped date string is in 'America/Vancouver' time, but `new Date()` parses
-        // it using the browser's local timezone. This logic corrects the timestamp.
-
-        // 1. Create a temporary date. Its UTC value is incorrect if the user is not in
-        //    the same timezone as Vancouver.
         const tempDate = new Date(dateStr);
-
-        // 2. Calculate the offset difference between the browser's timezone and Vancouver's
-        //    for that specific date (this handles DST correctly).
-        const localOffset = tempDate.getTimezoneOffset(); // User's offset in minutes.
+        const localOffset = tempDate.getTimezoneOffset();
         const vancouverDateInUTC = new Date(tempDate.toLocaleString('en-US', { timeZone: 'UTC' }));
         const vancouverDateInVancouver = new Date(tempDate.toLocaleString('en-US', { timeZone: 'America/Vancouver' }));
         const vancouverOffset = (vancouverDateInUTC.getTime() - vancouverDateInVancouver.getTime()) / 60000;
         const offsetDifference = localOffset - vancouverOffset;
-
-        // 3. Adjust the timestamp by the difference and create the correct Date object.
         const correctTimestamp = tempDate.getTime() - (offsetDifference * 60 * 1000);
-        trip.date = new Date(correctTimestamp);
+        fullTrip.date = new Date(correctTimestamp);
+        fullTrip.dayOfWeek = fullTrip.date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/Vancouver' });
 
-        // For consistency, also get the day of the week using the correct timezone.
-        trip.dayOfWeek = trip.date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/Vancouver' });
+        trips.push(fullTrip);
       } catch (e) {
-        console.warn('Date parsing error:', e);
+        console.warn('Date parsing error:', e, 'for date string:', fullTrip.started);
       }
+    } else {
+      console.warn('Could not parse date from "started" field:', fullTrip.started);
     }
-    trips.push(trip);
   });
 
   return trips;
 }
 
-// const serviceUrl = 'http://localhost:8080';
-const serviceUrl = 'https://evostats.cc';
+const serviceUrl = 'http://localhost:8080';
+// const serviceUrl = 'https://evostats.cc';
 
 
 async function scrapeAndRedirect() {

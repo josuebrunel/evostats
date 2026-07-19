@@ -3,6 +3,4 @@ services:
     image: ghcr.io/josuebrunel/evostat:latest
     ports:
       - "8580:8080"
-    env_file:
-      - backend/.env
     restart: unless-stopped
