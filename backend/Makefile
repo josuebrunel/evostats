@@ -15,5 +15,8 @@ tidy:
 build: tidy templ
 	go build -o ${BIN} ${SRC}
 
+test:
+	go test -v -race ./...
+
 run: build
 	${BIN}

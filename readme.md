@@ -1,5 +1,8 @@
 # EvoStats Chrome Extension
 
+![Go Version](https://img.shields.io/badge/Go-1.24-blue)
+![Build](https://img.shields.io/github/actions/workflow/status/josuebrunel/evostats/docker-image.yml?branch=main)
+
 A privacy-focused Chrome extension that analyzes your evo trip data and generates comprehensive visual reports.
 
 ## How It Works
